@@ -39,6 +39,15 @@
       font-size: 14px;
       color: #6c757d;
     }
+    header nav {
+      margin-top: 16px;
+    }
+    header nav a {
+      font-size: 13px;
+      color: #1971c2;
+      text-decoration: none;
+      margin: 0 8px;
+    }
     .effective-date {
       display: inline-block;
       background: #e8f4fd;
@@ -154,7 +163,8 @@
       <div class="app-icon">💰</div>
       <h1>머니수첩 개인정보처리방침</h1>
       <div class="subtitle">Privacy Policy for Moneynote</div>
-      <div class="effective-date">시행일: 2026년 06월 12일</div>
+      <div class="effective-date">최종 수정일: 2026년 06월 23일</div>
+      <nav><a href="./notification_policy.html">알림 처리방침 보기 →</a></nav>
     </header>
 
     <section>
@@ -166,9 +176,9 @@
         무엇인지 명확하게 설명합니다.
       </p>
       <div class="highlight-box">
-        ⚠️ 머니수첩은 알림 접근 권한을 통해 금융 앱 알림을 읽습니다.
-        수집된 거래 내역은 오직 사용자의 기기 내부에만 저장되며,
-        외부 서버로 전송되지 않습니다.
+        ⚠️ 모든 데이터는 우선 사용자의 기기에 저장됩니다. 비회원(게스트) 모드를 포함해
+        앱에 로그인된 상태에서는, 다른 기기에서도 동일한 데이터를 이용할 수 있도록
+        Google Firebase(클라우드)에도 함께 저장됩니다.
       </div>
     </section>
 
@@ -186,12 +196,27 @@
           <tr>
             <td>금융 앱 알림 내용<br><small style="color:#868e96">(카드사·은행·간편결제 알림)</small></td>
             <td>알림 접근 서비스(NotificationListenerService)</td>
-            <td>기기 내부 (로컬 DB)</td>
+            <td>기기 내부에서 분석 → 거래 기록은 클라우드에도 저장*</td>
           </tr>
           <tr>
-            <td>거래 금액, 가맹점명, 날짜</td>
+            <td>거래 금액, 가맹점명, 메모, 날짜</td>
             <td>알림 자동 파싱 또는 사용자 직접 입력</td>
-            <td>기기 내부 (로컬 DB)</td>
+            <td>기기 내부(로컬 DB) + 클라우드*</td>
+          </tr>
+          <tr>
+            <td>자산 정보<br><small style="color:#868e96">(은행/카드/증권/현금 계좌명, 잔액)</small></td>
+            <td>사용자 입력</td>
+            <td>기기 내부(로컬 DB) + 클라우드*</td>
+          </tr>
+          <tr>
+            <td>영수증 이미지</td>
+            <td>사용자가 직접 촬영 또는 갤러리에서 선택</td>
+            <td>기기 내부 + 클라우드(Firebase Storage)*</td>
+          </tr>
+          <tr>
+            <td>계정 정보<br><small style="color:#868e96">(이메일, 이름, 프로필 사진)</small></td>
+            <td>Google 로그인 또는 이메일 회원가입</td>
+            <td>Google Firebase(Authentication)</td>
           </tr>
           <tr>
             <td>앱 설정값<br><small style="color:#868e96">(카테고리, 예산, 테마 등)</small></td>
@@ -205,8 +230,12 @@
           </tr>
         </tbody>
       </table>
+      <div class="highlight-box">
+        * 비회원(게스트)으로 시작한 경우를 포함해 앱에 로그인된 상태에서는, 백업과 기기 간
+        동기화를 위해 해당 데이터가 Google Firebase(Firestore·Storage)에도 저장됩니다.
+      </div>
       <div class="no-collect-box">
-        ✅ 이름, 전화번호, 위치정보, 연락처 등 개인 식별 정보는 수집하지 않습니다.
+        ✅ 위치정보, 연락처, 통화 기록, 문자메시지 내용(결제 알림 패턴 매칭 외)은 수집하지 않습니다.
       </div>
     </section>
 
@@ -214,12 +243,13 @@
       <h2><span class="num">3</span>알림 접근 권한 사용 목적</h2>
       <p>앱은 Android의 <strong>NotificationListenerService</strong> 권한을 사용합니다.</p>
       <ul>
-        <li>카카오페이, 삼성카드, 토스, 신한카드 등 금융 앱 결제 알림을 실시간으로 감지</li>
-        <li>알림 텍스트에서 결제 금액, 가맹점명을 자동으로 추출하여 가계부에 기록</li>
-        <li>금융 관련 알림 이외의 알림 내용은 저장하거나 처리하지 않습니다</li>
+        <li>카카오페이, 삼성카드, 토스, 신한카드 등 금융 앱 결제·입금 알림을 실시간으로 감지</li>
+        <li>알림 텍스트에서 결제 금액, 가맹점명을 기기 내에서 자동으로 추출하여 가계부에 기록</li>
+        <li>금융 관련 알림 이외의 알림(메시지, SNS, 광고 등) 내용은 읽거나 저장하지 않습니다</li>
       </ul>
       <div class="highlight-box">
-        ⚠️ 알림 내용은 기기 내 처리에만 사용되며, 서버·클라우드·제3자에게 전송되지 않습니다.
+        ⚠️ 알림 텍스트의 분석 자체는 기기 내에서만 이루어집니다. 다만 분석 결과로 생성된 거래
+        기록은 일반 거래와 동일하게 취급되어, 로그인된 상태에서는 백업을 위해 클라우드에도 저장됩니다.
       </div>
     </section>
 
@@ -228,13 +258,15 @@
       <ul>
         <li>금융 알림 자동 파싱 및 지출 내역 자동 기록</li>
         <li>월별·카테고리별 소비 통계 제공</li>
+        <li>로그인 시 여러 기기 간 데이터 백업 및 동기화</li>
         <li>앱 기능 개선 및 오류 수정 (Crashlytics 충돌 로그 한정)</li>
       </ul>
     </section>
 
     <section>
       <h2><span class="num">5</span>제3자 제공 및 위탁</h2>
-      <p>앱은 원칙적으로 개인정보를 외부에 제공하지 않습니다. 단, 아래의 경우에 한합니다:</p>
+      <p>앱은 수집한 정보를 광고 목적으로 제3자에게 제공하거나 판매하지 않습니다. 서비스 제공을 위해
+      아래 업체에 처리를 위탁합니다.</p>
       <table>
         <thead>
           <tr>
@@ -245,7 +277,22 @@
         </thead>
         <tbody>
           <tr>
-            <td>Google Firebase<br>(Firebase Crashlytics)</td>
+            <td>Google Firebase<br>(Authentication)</td>
+            <td>로그인 및 계정 관리</td>
+            <td><a href="https://firebase.google.com/support/privacy" target="_blank">Firebase 개인정보처리방침</a></td>
+          </tr>
+          <tr>
+            <td>Google Firebase<br>(Firestore)</td>
+            <td>거래/자산/카테고리 데이터 백업 및 동기화</td>
+            <td><a href="https://firebase.google.com/support/privacy" target="_blank">Firebase 개인정보처리방침</a></td>
+          </tr>
+          <tr>
+            <td>Google Firebase<br>(Storage)</td>
+            <td>영수증 이미지 백업</td>
+            <td><a href="https://firebase.google.com/support/privacy" target="_blank">Firebase 개인정보처리방침</a></td>
+          </tr>
+          <tr>
+            <td>Google Firebase<br>(Crashlytics)</td>
             <td>앱 충돌 로그 수집 및 분석</td>
             <td><a href="https://firebase.google.com/support/privacy" target="_blank">Firebase 개인정보처리방침</a></td>
           </tr>
@@ -256,8 +303,11 @@
     <section>
       <h2><span class="num">6</span>정보의 보관 및 파기</h2>
       <ul>
-        <li>거래 내역, 설정값 등 로컬 데이터는 사용자가 앱을 삭제할 때 함께 삭제됩니다</li>
-        <li>앱 내 설정 &gt; 데이터 관리에서 언제든지 직접 삭제할 수 있습니다</li>
+        <li>로컬 데이터(거래 내역, 설정값 등)는 사용자가 앱을 삭제할 때 함께 삭제됩니다</li>
+        <li>앱 내에서 거래/자산/카테고리/영수증 이미지를 개별적으로 직접 삭제할 수 있습니다</li>
+        <li><strong>앱 내 설정 &gt; 회원 탈퇴</strong>를 통해 클라우드에 저장된 모든 데이터와 계정을
+            즉시, 영구적으로 삭제할 수 있습니다 (복구 불가)</li>
+        <li>회원 탈퇴를 하지 않고 앱만 삭제하는 경우, 클라우드에 백업된 데이터는 남아있을 수 있습니다</li>
         <li>Firebase Crashlytics 로그는 90일 후 자동 삭제됩니다</li>
       </ul>
     </section>
@@ -268,7 +318,8 @@
         <li><strong>열람:</strong> 저장된 거래 내역은 앱 내에서 언제든지 확인 가능</li>
         <li><strong>수정·삭제:</strong> 거래 내역을 직접 수정하거나 삭제 가능</li>
         <li><strong>알림 접근 권한 철회:</strong> 기기 설정 &gt; 알림 접근 허용에서 언제든지 권한 해제 가능</li>
-        <li><strong>전체 데이터 삭제:</strong> 앱 삭제 시 모든 로컬 데이터 즉시 삭제</li>
+        <li><strong>전체 데이터 삭제(회원 탈퇴):</strong> 앱 내 설정 &gt; 회원 탈퇴에서 계정과 클라우드에
+            저장된 모든 데이터의 영구 삭제를 요청할 수 있습니다</li>
       </ul>
     </section>
 
@@ -284,7 +335,7 @@
       <h2><span class="num">9</span>방침 변경</h2>
       <p>
         본 개인정보처리방침은 법령·서비스 변경에 따라 수정될 수 있습니다.
-        변경 시 앱 내 공지 또는 본 페이지를 통해 안내합니다.
+        변경 시 앱 내 공지사항 또는 본 페이지를 통해 안내합니다.
       </p>
     </section>
 
@@ -298,7 +349,7 @@
     </section>
 
     <footer>
-      <p>머니수첩 (Moneynote) · 시행일 2026년 06월 12일</p>
+      <p>머니수첩 (Moneynote) · 최종 수정일 2026년 06월 23일</p>
       <p style="margin-top:6px">© 2026 머니수첩. All rights reserved.</p>
     </footer>
   </div>
